@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- DeptMapper.java 인터페이스 위치 지정 -->
+<mapper namespace="com.spring.deptdao.DeptMapper">
+	
+	<!-- VO클래스의 filed명과 DB의 컬럼명 등록하여 일치-->
+	<resultMap type="com.spring.deptvo.DeptVO" id="deptVO">
+		<result property="deptid" column="Dept_ID" />
+		<result property="deptname" column="Dept_Name" />
+		<result property="depttel" column="Dept_Tel" />
+	</resultMap>
+	
+	<!-- 조건문을 걸 때는 <![CDATA[]]>를 사용하지 않는다. -->
+	<select id="listDepartment"
+		parameterType="com.spring.deptvo.DeptVO" resultMap="deptVO">
+		<![CDATA[
+		SELECT Dept_ID, Dept_Name, Dept_Tel 
+		FROM Department
+		]]>
+		<where>
+			<if test="deptname != null and deptname!=''">
+				<![CDATA[
+				Dept_Name like '%'||#{deptname}||'%'
+				]]>
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectDepartment"
+		parameterType="com.spring.deptvo.DeptVO" resultMap="deptVO">
+	<![CDATA[
+		SELECT Dept_ID, Dept_Name, Dept_Tel 
+		FROM Department
+		WHERE Dept_ID = #{deptid}
+	]]>
+	</select>
+	
+	<insert id="insertDepartment" parameterType="com.spring.deptvo.DeptVO" >
+	<![CDATA[
+		INSERT INTO Department (Dept_ID, Dept_Name, Dept_Tel)
+		VALUES (#{deptid}, #{deptname}, #{depttel})
+	]]>
+	</insert>
+
+	<update id="updateDepartment" parameterType="com.spring.deptvo.DeptVO" >
+	<![CDATA[
+		UPDATE Department
+		SET Dept_Name= #{deptname}, Dept_Tel = #{depttel}
+		WHERE DEPT_ID = #{deptid}
+	]]>
+	</update>
+
+	<delete id="deleteDepartment" parameterType="com.spring.deptvo.DeptVO" >
+	<![CDATA[
+		DELETE FROM Department 
+		WHERE DEPT_ID = #{deptid}
+	]]>
+	</delete>
+
+</mapper>
